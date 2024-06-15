@@ -26,6 +26,7 @@ $routes->group('/', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('katalogOrder', 'User::katalog'); 
     $routes->get('detailKatalog/(:num)', 'User::detailKatalog/$1');
     $routes->get('bookOrder/(:num)', 'User::bookOrderKatalog/$1');
+    $routes->post('submitPesan', 'User::submitformpesan');
 });
 
 // Grup rute untuk area admin
@@ -39,5 +40,5 @@ $routes->group('/backsite', ['namespace' => 'App\Controllers', 'filter' => 'auth
     $routes->get('edit-katalog/(:num)', 'Admin::editkatalog/$1');
     $routes->post('submiteditkatalog/(:num)', 'Admin::submiteditkatalog/$1');
     $routes->get('deletekatalog/(:num)', 'Admin::deletekatalog/$1');
-
+    $routes->post('submiteditorder', 'Admin::submiteditorder');
 });

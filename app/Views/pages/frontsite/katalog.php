@@ -14,6 +14,11 @@
   .card-body-custom {
       background-color: #8b5e34;
       color: white;
+      min-height: 120px;
+  }
+  .card-body-link {
+      background-color: #8b5e34;
+      color: white;
       border-radius: 0 0 10px 10px;
   }
   .card-title {
@@ -43,6 +48,9 @@
                         <h5 class="card-title"><?= $item['package_name'] ?></h5>
                     </div>
                     <div class="card-body card-body-custom">
+                        <p class="text-white"><?= $item['description'] ?></p>
+                    </div>
+                    <div class="card-body card-body-link">
                         <a href="/detailKatalog/<?= $item['catalogue_id'] ?>" class="btn btn-link text-white">Lihat lebih detail >></a>
                     </div>
                 </div>

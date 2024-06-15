@@ -10,6 +10,8 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"
     />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="<?= base_url('assets/backsite/vendor/datatables/css/jquery.dataTables.min.css'); ?>" rel="stylesheet">
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
       integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
@@ -29,5 +31,7 @@
 <?= $this->include('layout/frontsite/navbar'); ?>
 <?= $this->renderSection('content'); ?>
 <?= $this->include('layout/frontsite/footer'); ?>
+<script src="<?= base_url('assets/backsite/vendor/datatables/js/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?= base_url('assets/backsite/js/plugins-init/datatables.init.js'); ?>"></script>
   </body>
 </html>

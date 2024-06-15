@@ -36,17 +36,8 @@ tbody {
 }
 
 .datadiri {
-  background-color: #eae1f3;
+  background-color: #836944;
   border-block-color: #5b3189;
-}
-
-.datadiri h3 {
-  color: #5b3189;
-}
-
-.pengumuman {
-  background-image: url('../images/2.png');
-  width: 100%;
 }
 
 .usershape {
@@ -59,10 +50,6 @@ tbody {
 
 .textlogin h3 {
   color: #F5F5F5;
-}
-
-.textpengumuman h2 {
-  color: #5b3189;
 }
 
 .button1 {

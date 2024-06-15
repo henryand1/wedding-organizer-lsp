@@ -8,7 +8,7 @@ use App\Models\UserModel;
 use App\Models\UserConfigModel;
 use App\Models\SettingsModel;
 use App\Models\KatalogModel;
-
+use App\Models\OrderModel;
 
 class Admin extends BaseController
 {
@@ -24,10 +24,18 @@ class Admin extends BaseController
 
     public function laporpesanan()
     {
-        $id_user = session('user')['user_id'];
+        $orderModel = new OrderModel();
+
+        $orderItem = $orderModel->findAll();
+        $katalogModel = new KatalogModel();
+        foreach ($orderItem as &$order) {
+            $katalog = $katalogModel->where('catalogue_id', $order['catalogue_id'])->first();
+            $order['package_name'] = $katalog ? $katalog['package_name'] : 'Unknown';
+        }
 
         $data = [
             'title' => 'Laporan Pesanan | Admin',
+            'orderItem' => $orderItem
         ];
         return view('pages/backsite/laporan-pesanan', $data);
     }
@@ -41,7 +49,7 @@ class Admin extends BaseController
         $katalog = $katalogModel->findAll();
 
         $data = [
-            'title' => 'Laporan Pesanan | Admin',
+            'title' => 'Katalog | Admin',
             'katalog' => $katalog
         ];
         return view('pages/backsite/list-katalog', $data);
@@ -56,7 +64,7 @@ class Admin extends BaseController
         $settings = $settingsModel->findAll();
 
         $data = [
-            'title' => 'Laporan Pesanan | Admin',
+            'title' => 'Web Settings | Admin',
             'settings' => $settings
         ];
         return view('pages/backsite/settings-web', $data);
@@ -72,9 +80,23 @@ class Admin extends BaseController
         $katalog = $katalogModel->find($id);
 
         $data = [
-            'title' => 'Laporan Pesanan | Admin',
-            'katalog' => $katalog,
+            'title' => 'Edit Katalog | Admin',
             'validation' => \Config\Services::validation(),
+            'katalog' => $katalog,
+        ];
+        return view('pages/backsite/edit-katalog', $data);
+    }
+
+    public function editpesanan($id)
+    {
+        $orderModel = new OrderModel();
+
+        $order = $orderModel->find($id);
+
+        $data = [
+            'title' => 'Edit Order | Admin',
+            'validation' => \Config\Services::validation(),
+            'orderList' => $order,
         ];
         return view('pages/backsite/edit-katalog', $data);
     }
@@ -94,7 +116,7 @@ class Admin extends BaseController
         $files = $this->request->getFiles();
 
         $data = [
-            'title' => 'Laporan Pesanan | Admin',
+            'title' => 'Edit Katalog | Admin',
             'katalog' => $katalog,
         ];
 
@@ -109,11 +131,9 @@ class Admin extends BaseController
         if (isset($files['image'])) {
             $file = $files['image'];
             if ($files['image']->isValid() && !$files['image']->hasMoved()) {
-                // Generate a new file name and move the uploaded file
                 $newName = $files['image']->getRandomName();
                 $files['image']->move(WRITEPATH . 'uploads', $newName);
         
-                // Add the image file name to the data array
                 $katalogData['image'] = $newName;
             } else {
                 return redirect()->back()->withInput()->with('error', "File upload failed for foto");
@@ -124,12 +144,38 @@ class Admin extends BaseController
         return redirect()->to('/backsite/listkatalog');
     }
 
+    public function submiteditorder() {
+        // Check if the form was submitted
+        $order_ids = $this->request->getPost('order_id'); 
+        $statuses = $this->request->getPost('status'); 
+        // dd($statuses);
+            
+        if (!empty($order_ids) && is_array($order_ids) && !empty($statuses) && is_array($statuses)) {
+            // Instantiate the OrderModel
+            $orderModel = new OrderModel();
+
+            // Validate and update each order status
+            foreach ($order_ids as $index => $order_id) {
+                $status = $statuses[$index];
+                
+                // Assuming the model's update method takes the order ID and an array of data to update
+                $orderModel->update($order_id, ['status' => $status]);
+            }
+            
+            // Optionally, redirect to a success page or reload the page
+            return redirect()->to('backsite/laporanpesanan');
+        } else {
+            // Handle case where order_ids or statuses are empty or not arrays
+            return redirect()->to('backsite/dashboard');
+        }
+    }
+
     public function addkatalog()
     {
         $id_user = session('user')['user_id'];
 
         $data = [
-            'title' => 'Laporan Pesanan | Admin',
+            'title' => 'Tambah Katalog | Admin',
         ];
         return view('pages/backsite/add-paket', $data);
     }
@@ -141,7 +187,7 @@ class Admin extends BaseController
         $katalog = $katalogModel->where('catalogue_id', $id)->delete();
 
         $data = [
-            'title' => 'Laporan Pesanan | Admin',
+            'title' => 'Dashboard | Admin',
         ];
         return redirect()->to('/backsite/listkatalog');
     }
@@ -161,7 +207,7 @@ class Admin extends BaseController
             'price' => $harga,
             'description' => $deskripsi,
             'user_id' => $id_user,
-            'status_publish' => $status, // assuming a default status
+            'status_publish' => $status,
         ];
     
         if (isset($files['foto'])) {
@@ -169,7 +215,7 @@ class Admin extends BaseController
             if ($file->isValid() && !$file->hasMoved()) {
                 $newFileName = 'foto_' . time() . '.' . $file->getClientExtension();
                 $file->move(ROOTPATH . 'public/DataKatalog', $newFileName);
-                $dataKatalog['image'] = $newFileName; // Assign the new file name to 'image' key
+                $dataKatalog['image'] = $newFileName; 
             } else {
                 return redirect()->back()->withInput()->with('error', "File upload failed for foto");
             }
@@ -192,7 +238,7 @@ class Admin extends BaseController
         return redirect()->to('/backsite/dashboard');
     }
         $data = [
-            'title' => 'Seleksi | Login',
+            'title' => 'Login',
             'validation' => \Config\Services::validation(),
             'input' => $session->getFlashdata('input')
         ];

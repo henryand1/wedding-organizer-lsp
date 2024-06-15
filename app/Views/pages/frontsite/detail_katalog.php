@@ -33,23 +33,23 @@
 </head>
 <body>
 
-<main class="mt-5">
+<main class="mt-5 mb-5">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center mb-5">
-                <h2 class="custom-text"><?= $katalog['package_name'] ?></h2>
+            <div class="col-12 mb-3">
+                <h2 class="custom-text"><u><?= $katalog['package_name'] ?></u></h2>
             </div>
             <div class="col-md-8">
                 <div class="card card-custom">
                     <div class="card-body card-body-custom">
-                    <img src="<?= base_url('DataKatalog/' . $katalog['image']); ?>" class="img-fluid" alt="<?= $katalog['package_name'] ?>">
-                    <p class="mt-4"><?= $katalog['description'] ?></p>
+                    <img src="<?= base_url('DataKatalog/' . $katalog['image']); ?>" class="img-fluid" style="max-width:500px" alt="<?= $katalog['package_name'] ?>">
+                    <h5 class="mt-4 custom-text"><?= $katalog['description'] ?></h5>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 price-section">
-                <p>Harga</p>
-                <p><?= number_format($katalog['price'], 0, ',', '.') ?></p>
+                <h4 class="custom-text"><u>Harga</u></h4>
+                <h2 class="custom-text mb-4">Rp <?= number_format($katalog['price'], 0, ',', '.') ?></h2>
                 <a href="<?= base_url('bookOrder/' . $katalog['catalogue_id']) ?>" class="btn btn-custom">Book Now</a>
             </div>
         </div>

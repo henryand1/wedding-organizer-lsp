@@ -4,17 +4,18 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class KatalogModel extends Model
+class OrderModel extends Model
 {
-    protected $table = 'tb_catalogues';
-    protected $primaryKey = 'catalogue_id';
+    protected $table = 'tb_orders';
+    protected $primaryKey = 'order_id';
     protected $allowedFields = 
     [
-        'image', 
-        'package_name', 
-        'description', 
-        'price', 
-        'status_publish',
+        'catalogue_id', 
+        'name', 
+        'email', 
+        'phone_number', 
+        'wedding_date', 
+        'status',
         'user_id',
     ];
     protected $useTimestamps = true;

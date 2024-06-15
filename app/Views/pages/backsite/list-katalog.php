@@ -32,18 +32,18 @@
 															<th>Action</th>
 														</tr>
 													</thead>
-                                                    <?php foreach ($katalog as $item): ?>
-                                            <tr>
-                                                <td><?= $item['package_name'] ?></td>
-                                                <td><?= number_format($item['price'], 0, ',', '.') ?></td>
-                                                <td><?= $item['status_publish'] == 'Y' ? 'Publish' : 'Not Publish' ?></td>
-                                                <td>
-                                                    <a href="/backsite/edit-katalog/<?= $item['catalogue_id'] ?>" class="btn btn-sm btn-primary"><i class="la la-pencil"></i></a>
-                                                    <button class="btn btn-sm btn-danger" onclick="deleteConfirmation('<?= $item['catalogue_id'] ?>')"><i class="la la-trash-o"></i></button>
-                                                </td>
-                                                <!-- other columns -->
-                                            </tr>
-                                            <?php endforeach; ?>
+                                                <?php foreach ($katalog as $item): ?>
+                                                    <tr>
+                                                        <td><?= $item['package_name'] ?></td>
+                                                        <td><?= number_format($item['price'], 0, ',', '.') ?></td>
+                                                        <td><?= $item['status_publish'] == 'Y' ? 'Publish' : 'Not Publish' ?></td>
+                                                        <td>
+                                                            <a href="/backsite/edit-katalog/<?= $item['catalogue_id'] ?>" class="btn btn-sm btn-primary"><i class="la la-pencil"></i></a>
+                                                            <button class="btn btn-sm btn-danger" onclick="deleteConfirmation('<?= $item['catalogue_id'] ?>')"><i class="la la-trash-o"></i></button>
+                                                        </td>
+                                                        <!-- other columns -->
+                                                    </tr>
+                                                <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>

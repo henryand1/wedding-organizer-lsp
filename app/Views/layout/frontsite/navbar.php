@@ -4,7 +4,7 @@
       <nav class="navbar navbar-expand-lg navbar-light shadow sticky-top p-2" style="background-color: #E9E2D8">
         <div class="container">
           <a class="navbar-brand" href="/" style="color: #836944">
-           <h2>Wedding <br/> Organizer</h2>
+          <img class="logo" src="<?= base_url('assets/backsite/images/logo.png'); ?>" width="80"  alt="">
           </a>
           <button
             class="navbar-toggler"

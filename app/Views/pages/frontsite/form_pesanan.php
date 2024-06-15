@@ -2,51 +2,35 @@
 <?= $this->section('content') ?>
 
 <div class="container mb-5" style="margin-top: 50px;">
-    <form method="post" action="<?= base_url('camaba/submit-data-diri') ?>" enctype="multipart/form-data">
+    <form method="post" action="submitPesan" enctype="multipart/form-data">
     <h3 class="card-title fw-bold ms-4 mt-3 mb-3">Form Pesan</h3>
-        <div class="datadiri card" style="width: 100%;">
-            <!--DATA PRIBADI-->
-
-            <?php if (session()->getFlashdata('msg')) : ?>
-                <div class="alert alert-info " role="alert">
-                    <?= session()->getFlashdata('msg'); ?>
-                </div>
-            <?php endif; ?>
-<!--coba-->
-            <?php if (session()->getFlashdata('error')) : ?>
-        <div class="alert alert-danger" role="alert">
-            <?= session()->getFlashdata('error') ?>
-        </div>
-    <?php endif; ?>
-<!--coba-->
-
-
-
+        <div class="datadiri card" style="width: 100%; color:#F5F5F5">
             <div class="row align-items-start ms-1 mt-3">
                 <div class="col ms-2 me-1">
-                    <div class="mb-2">
-                        <label for="exampleInputEmail1" class="form-label">Nama Pemesan</label>
+                    <div class="mb-4">
+                        <label class="form-label">Nama Pemesan</label>
                         <input type="text" class="form-control" name="nama_lengkap">
                     </div>
-                    <div class="mb-2">
-                        <label for="exampleInputEmail1" class="form-label">Nomor Handphone</label>
+                    <div class="mb-4">
+                        <label class="form-label">Nomor Handphone</label>
                         <input type="text" class="form-control" name="no_hp" onkeypress="return hanyaAngka(event)">
                     </div>
                     <div class="mb-4">
-                        <label for="exampleInputEmail1" class="form-label">Alamat Email</label>
+                        <label class="form-label">Alamat Email</label>
                         <input type="text" class="form-control" name="email">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" name="tanggalNikah">
                     </div>
                     <div class="mb-2">
                         <label for="exampleInputEmail1" class="form-label">Pilihan Paket Wedding</label>
                         <select id="paket" name="paket" class="form-select" aria-label="Default select example">
                             <option selected disabled>--Pilih Paket--</option>
-
+                            <?php foreach ($katalog as $item): ?>
+                                <option value="<?= $item['package_name']; ?>"><?= $item['package_name']; ?></option>
+                            <?php endforeach; ?>
                         </select>
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                $('#prodi1').select2();
-                            });
-                        </script>
                     </div>
                 </div>
             </div>
@@ -58,30 +42,5 @@
         </div>
     </form>
 </div>
-
-<script src="<?= base_url('js/sweetalert2.all.min.js') ?>"></script>
-<script>
-    function deleteConfirmation(id) {
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "User akan dihapus secara permanen!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#143b64',
-            cancelButtonColor: '#ff8f16',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Redirect atau panggil fungsi deleteData() untuk menghapus data
-                deleteData(id);
-            }
-        });
-    }
-
-    function deleteData(id) {
-        window.location.href = "/backsite/user/delete/" + id;
-    }
-</script>
 
 <?= $this->endSection('content') ?>

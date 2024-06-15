@@ -17,7 +17,7 @@
 										</div>
 										<div class="card-body">
 											<div class="table-responsive">
-												<table id="example3" class="display" style="min-width: 845px">
+												<table id="example3" class="display" style="min-width: 100%">
 													<thead>
 														<tr>
 															<th>No Booking</th>
@@ -26,7 +26,14 @@
 															<th>Status</th>
 														</tr>
 													</thead>
-													</tr>
+                                                    <?php foreach ($orderItem as $order): ?>
+                                                        <tr style="background-color:#ffffff">
+                                                            <td><?= $order['order_id'] ?></td>
+                                                            <td><?= $order['package_name'] ?></td>
+                                                            <td><?= $order['name'] ?></td>
+                                                            <td><?= $order['status'] ?></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
 												</table>
 											</div>
 										</div>
@@ -37,33 +44,5 @@
 					</div>
             </div>
         </div>
-        <!--**********************************
-            Content body end
-        ***********************************-->
-
-		<script src="<?= base_url('js/sweetalert2.all.min.js') ?>"></script>
-<script>
-    function deleteConfirmation(id) {
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "User akan dihapus secara permanen!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#143b64',
-            cancelButtonColor: '#ff8f16',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Redirect atau panggil fungsi deleteData() untuk menghapus data
-                deleteData(id);
-            }
-        });
-    }
-
-    function deleteData(id) {
-        window.location.href = "/backsite/user/delete/" + id;
-    }
-</script>
 
 <?= $this->endSection('content') ?>

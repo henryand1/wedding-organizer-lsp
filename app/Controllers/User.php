@@ -6,6 +6,8 @@ use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\UserConfigModel;
 use App\Models\KatalogModel;
+use App\Models\OrderModel;
+use App\Models\SettingsModel;
 
 class User extends BaseController
 {
@@ -36,17 +38,83 @@ class User extends BaseController
 
     public function listpesanan() 
     {
-        return view('pages/frontsite/list_pesanan');
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        } else {
+            $id_user = session('user')['user_id'];
+            $orderModel = new OrderModel();
+            $orderList = $orderModel->where('user_id', $id_user)->findAll();
+            $katalogModel = new KatalogModel();
+            foreach ($orderList as &$order) {
+                $katalog = $katalogModel->where('catalogue_id', $order['catalogue_id'])->first();
+                $order['package_name'] = $katalog ? $katalog['package_name'] : 'Unknown';
+            }
+
+            $data = [
+                'title' => 'List Pesanan',
+                'orderItem' => $orderList
+            ];
+            return view('pages/frontsite/list_pesanan', $data);
+        }
     }
 
     public function formpemesanan() 
     {
-        return view('pages/frontsite/form_pesanan');
+        $katalogModel = new KatalogModel();
+        $katalog = $katalogModel->where('status_publish', 'Y')->findAll();
+
+        $data = [
+            'title' => 'Form Pesanan',
+            'katalog'=> $katalog
+        ];
+        return view('pages/frontsite/form_pesanan', $data);
+    }
+
+    public function submitformpesan()
+    {
+        $id_user = session('user')['user_id'];
+        $namaPaket = $this->request->getPost('paket');
+        $nama = $this->request->getPost('nama_lengkap');
+        $nomorHp = $this->request->getPost('no_hp');
+        $tanggalWedding = $this->request->getPost('tanggalNikah');
+        $email = $this->request->getPost('email');
+
+        $katalogModel = new KatalogModel();
+
+        $katalog= $katalogModel->where('package_name', $namaPaket)->first();
+        $katalogId = $katalog['catalogue_id'];
+    
+        $dataFormPesan = [
+            'catalogue_id' => $katalogId,
+            'name' => $nama,
+            'email' => $email,
+            'phone_number'=>$nomorHp,
+            'wedding_date'=>$tanggalWedding,
+            'user_id' => $id_user,
+            'status' => 'REQUESTED',
+        ];
+
+    
+        $dataOrderModel = new OrderModel();
+        if ($dataOrderModel->insert($dataFormPesan)) {
+            return redirect()->to('homepage')->with('msg', 'Data successfully submitted.');
+        } else {
+            return redirect()->to('homepage')->with('error', 'Failed to submit data.');
+        }
     }
 
     public function ourcontacts() 
     {
-        return view('pages/frontsite/our_contacts');
+        $settingsModel = new SettingsModel();
+        $settings = $settingsModel->findAll();
+
+        $data = [
+            'title' => 'Our Contacts',
+            'settings' => $settings
+        ];
+
+        return view('pages/frontsite/our_contacts', $data);
     }
 
     public function bookOrderKatalog($id) 
@@ -69,10 +137,10 @@ class User extends BaseController
     // Periksa apakah user sudah login
     if ($session->get('logged_in')) {
         // Jika user sudah login, redirect ke halaman dashboard
-        return redirect()->to('katalogOrder');
+        return redirect()->to('homepage');
     }
         $data = [
-            'title' => 'Seleksi | Login',
+            'title' => 'Wedding Organizer | Login',
             'validation' => \Config\Services::validation(),
             'input' => $session->getFlashdata('input')
         ];
@@ -87,7 +155,33 @@ class User extends BaseController
     
         $userModel = new UserModel();
         $user = $userModel->where('username', $username)->first();
+
+        if (empty($username)) {
+            // If username is empty, set error message
+            $validation = \Config\Services::validation();
+            $validation->setError('username', 'Silakan isi username anda!');
+            $session->setFlashdata('input', $this->request->getPost());
     
+            $data = [
+                'title' => 'Wedding Organizer | Login',
+                'validation' => $validation,
+                'input' => $session->getFlashdata('input')
+            ];
+            return view('pages/frontsite/login', $data);
+        } else if (empty($password)) {
+            // If password is empty, set error message
+            $validation = \Config\Services::validation();
+            $validation->setError('password', 'Silakan isi password anda!');
+            $session->setFlashdata('input', $this->request->getPost());
+    
+            $data = [
+                'title' => 'Wedding Organizer | Login',
+                'validation' => $validation,
+                'input' => $session->getFlashdata('input')
+            ];
+            return view('pages/frontsite/login', $data);
+        }
+
         if ($user && password_verify($password, $user['password'])) {
             $session->set('logged_in', true);
             $session->set('user', $user);
@@ -100,11 +194,8 @@ class User extends BaseController
             } else {
                 return redirect()->to('/homepage');
             }
-        } else {
-            // Jika autentikasi gagal, kembalikan pengguna ke halaman login dengan pesan kesalahan
-            $session->setFlashdata('error', 'Username atau password salah.');
-            return redirect()->to('/login');
         }
+        return redirect()->to('/login');
     }
 
     public function logout()
@@ -113,7 +204,7 @@ class User extends BaseController
         session()->destroy();
 
         // Redirect ke halaman login atau halaman lain yang Anda inginkan
-        return redirect()->to('/login');
+        return redirect()->to('/homepage');
     }
 
 }
